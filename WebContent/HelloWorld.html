@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        // 1. 当整个 HTML 文档完全加载成功后触发 window.onload 事件，
+        // 事件触发时，执行后面 function 里面的函数体，在其中可以获取到 HTML 文档的任何元素
+        /*window.onload = function () {
+            // 2. 获取所有的 button 节点，并取得第一个元素
+            var btn = document.getElementsByTagName("button")[0];
+            // 3. 为 button 的 onclick 事件赋值：当点击 button 时，执行函数体
+            btn.onclick=function () {
+                alert("Hello World!");
+            }
+        }*/
+
+        // 1. 获取 button
+        var btn = document.getElementsByTagName("button");
+        alert(btn.length);
+        // 2. 为 button 添加 onclick 响应函数
+        btn[0].onclick=function () {
+            alert("Hello World!")
+        }
+    </script>
+</head>
+<body>
+    <!-- HTML 代码和 JS 代码耦合在一起 -->
+    <!--<button onclick="alert('Hello World!')">Click Me</button>-->
+    <button>Click Me</button>
+</body>
+</html>
+<script>
+
+    /** 在整个 HTML 文档被加载后，获取其中的节点。
+     * 把 script 节点放在 html 文档的最后
+     * 但不符合写 JS 代码的习惯
+     */
+    /* //1. 获取 button
+    var btn = document.getElementsByTagName("button");
+    alert(btn.length);
+    // 2. 为 button 添加 onclick 响应函数
+    btn[0].onclick=function () {
+        alert("Hello World!")
+    }*/
+</script>
