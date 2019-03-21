@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /**
+         * 省市二级联动
+         */
+        window.onload = function () {
+            //1. 为 #province 添加 onchange 响应函数
+            document.getElementById("province").onchange = function () {
+
+                //1.1 把 #city 节点除第一个子节点外都移除.
+                let city = document.getElementById("city");
+                let options = city.getElementsByTagName("option");
+                let len = options.length;
+                for(let j = 1; j < len; j++) {
+                    city.removeChild(options[1]);
+                }
+                let proVal = this.value;
+                if(proVal == ""){ // 请选择，不执行
+                    return;
+                }
+
+                //2. 加载 cities.xml 文件. 得到代表给文档的 document 对象
+                let xmlDoc = parseXML();
+
+                //3. 在 cities.xml 文档中查找和选择的省匹配的 province 节点.
+                let proEles = xmlDoc.selectNodes("//province[@name='" + proVal + "']");
+
+                //4. 再得到 province 节点的所有的 city 子节点
+                let cityEles = proEles[0].getElementsByTagName("city");
+
+                //5. 遍历 city 子节点, 得到每一个 city 子节点的文本值
+                for(let i = 0; i < cityEles.length; i++){
+                    //6. 利用得到的文本值创建 option 节点
+                    //<option>cityName</option>
+                    let cityText = cityEles[i].firstChild.nodeValue;
+                    let city = document.getElementById("city");
+                    let option = document.createElement("option");
+                    let cityTextNode = document.createTextNode(cityText);
+                    option.appendChild(cityTextNode);
+                    //7. 并把 6 创建的 option 节点添加为 #city 的子节点.
+                    city.appendChild(option);
+                }
+            }
+
+            // 解析xml，只支持ie
+            function parseXML(){
+
+                try{
+                    xmlDoc= new ActiveXObject("Microsoft.XMLDOM");
+                }catch(e){
+                    try{
+                        xmlDoc= document.implementation.createDocument("","",null);
+                    }catch(e){
+
+                        alert(e.message);
+                        return;
+                    }
+                }
+                xmlDoc.async = false;
+                xmlDoc.load("cities.xml");
+                return xmlDoc;
+
+            }
+
+
+        }
+    </script>
+</head>
+<body>
+    <select id="province">
+        <option value="">请选择...</option>
+        <option value="河北省">河北省</option>
+        <option value="辽宁省">辽宁省</option>
+        <option value="山东省">山东省</option>
+    </select>
+
+    <select id="city"><option value="...">请选择...</option></select>
+</body>
+</html>

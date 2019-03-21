@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+
+        window.onload = function(){
+            testInnerHTML();
+
+            //测试 innerHTML 属性
+            function testInnerHTML() {
+                let cityNode = document.getElementById("city");
+                alert(cityNode.innerHTML);
+
+                //互换 #city 节点和 #game 节点中的内容. 
+                let tempHTML = cityNode.innerHTML;
+                let gameNode = document.getElementById("game");
+
+                cityNode.innerHTML = gameNode.innerHTML;
+                gameNode.innerHTML = tempHTML;
+            }
+
+            //测试 insertBefore() 插入节点
+            //该方法除了进行插入外, 还有移动节点的功能. 
+            function testInsert() {
+                //1. 把 #rl 插入到  #bj 节点的前面
+                let bjNode = document.getElementById("bj");
+                let rlNode = document.getElementById("rl")
+
+                let cityNode = document.getElementById("city");
+                cityNode.insertBefore(rlNode, bjNode);
+
+                alert("abc");
+                testInsertAfter(rlNode, bjNode);
+            }
+
+            //把 newNode 插入到 refNode 的后面
+            function testInsertAfter(newNode, refNode) {
+                //1. 测试 refNode 是否为其父节点的最后一个子节点
+                let refParent = refNode.parentNode;
+                if(refParent){
+                    //2. 若是: 直接把 newNode 插入为 refNode 父节点的最后一个子节点.
+                    if(refNode == refParent.lastChild){
+                        refParent.appendChild(newNode);
+                    }else {
+                        //3. 若不是: 获取 refNode 的下一个兄弟节点, 然后插入到其下一个兄弟节点的前面.
+                        refParent.insertBefore(newNode, refNode.nextSibling);
+
+                    }
+                }
+
+
+            }
+            
+            // 测试 removeChild() 方法: 删除节点
+            function testRemoveChild() {
+                /*
+				alert("1");
+				
+				let bjNode = document.getElementById("bj");
+				bjNode.parentNode.removeChild(bjNode);
+				*/
+
+                //为每个 li 节点添加一个 confirm(确认对话框): 确定要删除 xx 的信息吗?
+                //若确定, 则删除
+
+                let liNodes = document.getElementsByTagName("li");
+
+                for(let i = 0; i < liNodes.length; i++){
+                    liNodes[i].onclick = function(){
+                        let flag = confirm("确定要删除" +
+                            this.firstChild.nodeValue + "的信息吗?");
+
+                        if(flag){
+                            this.parentNode.removeChild(this);
+                        }
+                    }
+                }
+
+                //let flag = confirm("确定要删除吗?");
+                //alert(flag);
+            }
+            
+            // 测试 replaceChild 方法
+            function testReplaceChild() {
+                alert(1);
+
+                let bjNode = document.getElementById("bj");
+                let rlNode = document.getElementById("rl");
+                let gameNode = document.getElementById("game");
+
+                // gameNode.replaceChild(bjNode, rlNode);
+
+                replaceEach(bjNode, rlNode);
+
+                /*
+                let cityNode = document.getElementById("city");
+                //cityNode.replaceChild(rlNode, bjNode);
+
+                //实现 bj 节点和 rl 节点的互换.
+                let gameNode = document.getElementById("game");
+
+                //克隆 bjNode
+                //cloneNode(deep) 若 deep 为true, 则可以克隆子节点
+                let bjNode2 = bjNode.cloneNode(true);
+                gameNode.replaceChild(bjNode2, rlNode);
+
+                alert(2);
+
+                cityNode.replaceChild(rlNode, bjNode);
+                */
+
+            }
+
+            // 自定义互换两个节点的函数
+            function replaceEach(aNode, bNode) {
+                if(aNode == bNode){
+                    return;
+                }
+                //1. 获取 aNode 和 bNode 的父节点. 使用 parentNode 属性
+                let aParent = aNode.parentNode;
+                let bParent = bNode.parentNode;
+
+                if(aParent && bParent) {
+                    //2. 克隆 aNode 或 bNode
+                    let aNode2 = aNode.cloneNode(true);
+
+                    //3. 分别调用 aNode 的父节点和 bNode 的父节点的 replaceChild()方法实现节点的互换
+                    bParent.replaceChild(aNode2, bNode);
+                    aParent.replaceChild(bNode, aNode);
+                }
+            }
+            
+            // 新创建一个元素节点, 并把该节点添加为文档中指定节点的子节点
+            function testAddEle() {
+                alert(1);
+
+                //1. document.createElement(elementTagName)
+                //新创建一个元素节点, 返回值为指向元素节点的引用
+                //<li></li>
+                let liNode = document.createElement("li");
+                //2. 创建 "厦门" 的文本节点
+                //document.createTextNode(string) 创建一个文本节点
+                //参数为文本值, 返回该文本节点的引用.
+                let liTestNode = document.createTextNode("南京")
+                //<li>厦门</li>
+                liNode.appendChild(liTestNode);
+                //2. elementNode.appendChild(newChild): 为 elementNode
+                //新添加 newChild 子节点, 该子节点将作为 elementNode 的最后一个子节点.
+                document.getElementById("city").appendChild(liNode);
+            }
+
+            //关于节点的属性: nodeType, nodeName, nodeValue
+            //在文档中, 任何一个节点都有这 3 个属性
+            //而 id, name, value 是具体节点的属性.
+            function compare() {
+                //1. 元素节点的这 3 个属性
+                let bjNode = document.getElementById("bj");
+                alert(bjNode.nodeType); //元素节点: 1
+                alert(bjNode.nodeName); //节点名: li
+                alert(bjNode.nodeValue); //元素节点没有 nodeValue 属性值: null
+
+                //2. 属性节点
+                let nameAttr = document.getElementById("name").getAttributeNode("name");
+                alert(nameAttr.nodeType); //属性节点: 2
+                alert(nameAttr.nodeName); //属性节点的节点名: 属性名 name
+                alert(nameAttr.nodeValue); //属性节点的 nodeValue 属性值: 属性值 username
+
+                //3. 文本节点:
+                let textNode = bjNode.firstChild;
+                alert(textNode.nodeType); //文本节点: 3
+                alert(textNode.nodeName); //节点名: #text
+                alert(textNode.nodeValue); //文本节点的 nodeValue 属性值: 文本值本身. 北京
+
+                //nodeType、nodeName 是只读的.
+                //而 nodeValue 是可以被改变的。 
+                //以上三个属性, 只有在文本节点中使用 nodeValue 读写文本值时使用最多. 
+            }
+            // 获取文本节点
+            function testTextNode() {
+                //文本节点一定是元素节点的子节点.
+
+                //1. 获取文本节点所在的元素节点
+                let bjNode = document.getElementById("bj");
+                //2. 通过 firstChild 定义为到文本节点
+                let bjTextNode = bjNode.firstChild;
+                //3. 通过操作文本节点的 nodeValue 属性来读写文本节点的值.
+                alert(bjTextNode.nodeValue);
+                bjTextNode.nodeValue="南京";
+                // alert(bjTextNode);
+            }
+
+            // 获取元素节点的子节点
+            function testChildNodes() {
+                //1. 获取 #city 节点的所有子节点.
+                let cityNode = document.getElementById("city");
+
+                //2. 利用元素节点的 childNodes 方法可以获取指定元素节点的所有子节点.
+                //但该方法不实用.
+                alert(cityNode.childNodes.length);
+                //3. 获取 #city 节点的所有 li 子节点.
+                let liNodes = cityNode.getElementsByTagName("li");
+                alert(liNodes.length);
+
+                //4. 获取指定节点的第一个子节点和最后一个子节点.
+                alert(cityNode.firstChild);
+                alert(cityNode.lastChild);
+            }
+
+            // 读写属性节点: 通过元素节点 . 的方式来获取属性值和设置属性值.
+            function testAttr() {
+                //属性节点即为某一指定的元素节点的属性.
+                //1. 先获取指定的那个元素节点
+                let nameNode = document.getElementById("name");
+
+                //2. 再读取指定属性的值
+                let val = nameNode.value;
+                alert(val);
+
+                //3. 设置指定的属性的值.
+                nameNode.value = "找好工作";
+
+                // let nameAttr = nameNode.getAttributeNode("value");
+                // alert(nameAttr);
+                // alert("--" + nameAttr.nodeValue);
+                // nameAttr.nodeValue = "atguigu";
+            }
+
+            // 获取指定的元素节点.
+            function testNode() {
+                //1. 获取 id 为 bj 的那个节点.
+                //在编写 HTML 文档时, 需确保 id 属性值是唯一的.
+                //该方法为 document 对象的方法
+                let bjNode = document.getElementById("bj");
+                alert(bjNode);
+                alert(bjNode.nodeType); // 1
+                alert(bjNode.nodeName); // li
+                alert(bjNode.nodeValue); // null
+
+                //2. 获取所有的 li 节点.
+                //使用标签名获取指定节点的集合.
+                //该方法为 Node 接口的方法, 即任何一个节点都有这个方法.
+                let liNodes = document.getElementsByTagName("li");
+                alert(liNodes.length);
+
+                let cityNode = document.getElementById("city")
+                let cityLiNodes = cityNode.getElementsByTagName("li");
+                alert(cityLiNodes.length);
+
+
+                //3. 根据 HTML 文档元素的 name 属性名来获取指定的节点的集合.
+                let genders = document.getElementsByName("gender");
+                alert(genders.length);
+
+                //若 HTML 元素自身没有定义 name 属性, 则 getElementsByName()
+                //方法对于 IE 无效. 所以使用该方法时需谨慎.
+                let bj = document.getElementsByName("bj");
+                alert(bj.length);
+            }
+        }
+    </script>
+</head>
+<body>
+    <p>你喜欢哪个城市?</p>
+    <ul id="city">
+        <li id="bj" name="BeiJing">北京</li>
+        <li>上海</li>
+        <li>东京</li>
+        <li>首尔</li>
+    </ul>
+
+    <br><br>
+    <p>你喜欢哪款单机游戏?</p>
+    <ul id="game">
+        <li id="rl">红警</li>
+        <li>实况</li>
+        <li>极品飞车</li>
+        <li>魔兽</li>
+    </ul>
+
+    <br><br>
+    gender:
+    <input type="radio" name="gender" value="male"/>Male
+    <input type="radio" name="gender" value="female"/>Female
+
+    <br><br>
+    name: <input type="text" name="username" id="name" value="atguigu"/>
+</body>
+</html>

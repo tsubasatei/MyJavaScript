@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        /*
+         * 为 #employeetable 的所有的 a 节点添加 Onclick 响应函数:
+         * 1. 弹出确认对话框: 确定要删除 xx 的信息吗? xx 为当前 a 节点所在的 td 所在的 tr 的
+         * 第一个 td 子节点的文本值, 且要去除前后空格.
+         * 2. 若点击 "确认" , 则删除 a 节点的所在的 行
+         *
+         * 注意:
+         * 1. a 节点是一个超级链接, 可以在其 onclick 事件中通过返回 false, 来取消默认行为
+         * 2. tr 的直接父节点为 tbody, 而不是 table
+         * 3. 可以把去除前后空格的代码写成一个 trim(str) 函数.
+         *
+         * 为 #addEmpButton 添加 onclick 响应函数:
+         * 1. 获取 #name, #email, #salary 的文本框的值
+         * 2. 利用 1 获取的文本值创建 3 个 td 节点, 在创建一个 tr 节点. 并把以上的 3 个 td
+         *    节点价位 tr 节点的子节点
+            <tr>
+                <td>Tom</td>
+                <td>tom@tom.com</td>
+                <td>5000</td>
+            </tr>
+         * 3. 在创建一个 td 节点: <td><a href="deleteEmp?id=xxx">Delete</a></td>
+         * 4. 把 3 创建的 td 也加为 tr 的子节点.
+         * 5. 再把 tr 加为 #employeetable 的 tbody 子节点的子节点.
+         * 6. 为新创建的 tr 的 a 子节点添加 Onclick 响应函数, 使其也具备删除的功能.
+         *
+         *
+         */
+
+        window.onload = function () {
+            // 删除一行
+            function removeTr(node) {
+                let trNode = node.parentNode.parentNode;
+                let val = trNode.getElementsByTagName("td")[0].firstChild.nodeValue.trim();
+                let flag = confirm("确定要删除" + val + "的信息吗？");
+                if(flag){
+                    trNode.parentNode.removeChild(trNode);
+                }
+            }
+
+            let aNodes = document.getElementById("employeetable").getElementsByTagName("a");
+            for(let i = 0; i < aNodes.length; i++) {
+                aNodes[i].onclick = function () {
+                    removeTr(this);
+
+                    return false;
+                }
+            }
+
+
+            document.getElementById("addEmpButton").onclick = function () {
+                let name = document.getElementById("name").value;
+                let email = document.getElementById("email").value;
+                let salary = document.getElementById("salary").value;
+                if(name.trim() == "") {
+                    alert("请填写 name");
+                    return false;
+                }
+                if(email.trim() == "") {
+                    alert("请填写 email");
+                    return false;
+                }
+                if(salary.trim() == "") {
+                    alert("请填写 salary");
+                    return false;
+                }
+                let nameTd = document.createElement("td");
+                let emailTd = document.createElement("td");
+                let salaryTd = document.createElement("td");
+                let operTd = document.createElement("td");
+
+                let nameVal = document.createTextNode(name);
+                let emailVal = document.createTextNode(email);
+                let salaryVal = document.createTextNode(salary);
+                nameTd.appendChild(nameVal);
+                emailTd.appendChild(emailVal);
+                salaryTd.appendChild(salaryVal)
+
+                let aNode = document.createElement("a");
+                aNode.href="deleteEmp?id=xxx";
+                let val = document.createTextNode("Delete");
+                aNode.appendChild(val);
+                aNode.onclick = function(){
+                    removeTr(this);
+                    return false;
+                }
+                operTd.appendChild(aNode);
+
+                let tr = document.createElement("tr");
+                tr.appendChild(nameTd);
+                tr.appendChild(emailTd);
+                tr.appendChild(salaryTd);
+                tr.appendChild(operTd);
+                document.getElementsByTagName("tbody")[0].appendChild(tr);
+
+
+                return false;
+            }
+
+            //value: 用于获取 html 表单元素的值
+            //alert(this.value); //
+            //nodeValue: 用于获取文本节点的文本值.
+            //alert(this.nodeValue); //null
+        }
+    </script>
+</head>
+<body>
+    <center>
+        <br> <br> 添加新员工 <br> <br>
+        name: <input type="text" name="name" id="name" />&nbsp;&nbsp;
+        email: <input type="text" name="email" id="email" />&nbsp;&nbsp;
+        salary: <input type="text" name="salary" id="salary" />
+        <br> <br>
+        <button id="addEmpButton" value="abc">Submit</button>
+        <br> <br>
+        <hr>
+        <br> <br>
+        <table id="employeetable" border="1" cellpadding="5" cellspacing=0>
+            <tbody>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Salary</th>
+                <th>&nbsp;</th>
+            </tr>
+            <tr>
+                <td>Tom</td>
+                <td>tom@tom.com</td>
+                <td>5000</td>
+                <td><a href="deleteEmp?id=001">Delete</a></td>
+            </tr>
+            <tr>
+                <td>
+                    Jerry
+                </td>
+                <td>jerry@sohu.com</td>
+                <td>8000</td>
+                <td><a href="deleteEmp?id=002">Delete</a></td>
+            </tr>
+            <tr>
+                <td>Bob</td>
+                <td>bob@tom.com</td>
+                <td>10000</td>
+                <td><a href="deleteEmp?id=003">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </center>
+</body>
+</html>
