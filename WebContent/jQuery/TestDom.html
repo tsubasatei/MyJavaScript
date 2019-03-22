@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 不能写成 <script/> -->
+    <script src="jquery-1.7.2.js"></script>
+    <script>
+
+        $(function () {
+            testHtml();
+
+            // 8) 测试使用 html() 方法.
+            function testHtml() {
+                alert($("#city").html());
+                $("#city").html("<li id='atguigu'>尚硅谷</li>");
+            }
+
+            // 7) 测试使用 jQuery wrap, wrapAll, wrapInner
+            function testWrap() {
+                //包装 li 本身
+                $("#city li").wrap("<font color='red'></font>");
+
+                //包装所有的 li
+                $("#game li").wrapAll("<font color='red'></font>");
+
+                //包装 li 里边的文字.
+                $("#language li").wrapInner("<font color='red'></font>");
+            }
+
+            // 6) 测试使用 jQuery replaceWith (replaceAll) 方法: 替换节点
+            /*
+            1. replaceWith , replaceAll 一对方法, 可以完成一件事. 就是主语宾语哪个在前面的问题.
+            2. 以上的两个方法还有移动节点的功能
+            3. 节点互换需要先克隆节点.
+            4. var $rl = $("#rl").replaceWith($bj2);
+            */
+            function testReplace() {
+                //1. 创建一个 <li>尚硅谷</li> 节点, 替换 #city 的最后一个 li 子节点
+                // $("<li>尚硅谷</li>").replaceAll($("#city li:last"));
+
+                //2. 创建一个 <li>[尚硅谷]</li> 节点,
+                //替换 #city 的第二个 li 子节点
+                // $("#city li:eq(1)").replaceWith("<li>[尚硅谷]</li>");
+
+
+                //3. 互换以下两个节点: #rl 和 #bj. 还有移动的功能.
+                let $bj2 = $("#bj").clone(true);
+                let $rl = $("#rl").replaceWith($bj2);
+                //节点互换需要先克隆节点.
+                $("#bj").replaceWith($rl);
+
+
+            }
+
+            // 5) 测试使用 jQuery clone 方法: 复制节点
+            function testClone() {
+                $("li").click(function () {
+                    alert($(this).text());
+                });
+
+                //复制 #bj 节点, 并添加到 #rl 节点的后面
+                /*
+                1. clone 节点时需要注意克隆后的节点的 id 属性. 若原节点有 id属性, 则克隆后, 会出现在一个文档中有两个 id 相同的节点的情况.
+                2. clone(true): 在克隆节点的同时, 克隆节点包含的事件.
+                */
+                $("#bj").clone(true).attr("id", "bj2").insertAfter($("#rl"));
+            }
+
+            // 4) 测试使用 jQuery 删除节点
+            function testDelete() {
+                //1. 为 #city 的每一个 li 添加 click 响应函数: 点击时, li 被删除
+                $("#city li").click(function () {
+                    $(this).remove();
+                });
+
+                //jQuery 对象的 remove() 方法: 将把 jQuery 对象对应的 DOM 节点直接删除.
+                $("#bj").remove();
+
+                //2. 清空 #game 节点
+                //jQuery 对象的 empty() 方法: 清空 jQuery 对象对应的 DOM 对象的所有的子节点.
+                alert("要清空了!");
+                $("#game").empty();
+            }
+
+            // 3)测试使用 jQuery 插入节点
+            function testInsert() {
+                //1. 创建一个 <li id="atguigu">尚硅谷</li>
+                //2. 并把其加入到 #bj 的后面
+                // $("<li id='atguigu'>尚硅谷</li>").insertAfter($("#bj"));
+                // $("#bj").after("<li id='atguigu'>[尚硅谷]</li>")
+
+                // $("<li id='atguigu'>尚硅谷</li>").insertBefore($("#bj"));
+                $("#bj").before("<li id='atguigu'>[尚硅谷]</li>");
+            }
+
+            // 2) 测试使用 jQuery 创建节点并插入节点到指定的节点中
+            /*
+            1. 创建节点: 使用 $(html) 方式即可, 元素节点, 文本节点, 属性节点可以一网打尽
+            返回对应节点的 jQuery 对象: $("<li id='atguigu'>尚硅谷</li>")
+
+            2. 添加节点:
+            1). appendTo 和 append: 主语和宾语的位置不同:
+            $("<li id='atguigu'>尚硅谷</li>").appendTo($("#city"));
+            $("#city").append("<li id='atguigu'>[尚硅谷]</li>");
+
+            2). prependTo 和  prepend: 主语和宾语的位置不同:
+            $("<li id='atguigu'>尚硅谷</li>").prependTo($("#city"));
+            $("#city").prepend("<li id='atguigu'>[尚硅谷]</li>");
+            */
+            function testAdd() {
+                //1. 创建一个 <li id="atguigu">尚硅谷</li>
+                //2. 并把其加入到 #city 的子节点
+                // $("<li id='atguigu'>尚硅谷</li>").appendTo($("#city"));
+                // $("#city").append("<li id='atguigu'>[尚硅谷]</li>");
+
+                $("<li id='atguigu'>尚硅谷</li>").prependTo($("#city"));
+                $("#city").prepend("<li id='atguigu'>[尚硅谷]</li>")
+
+                alert($("#atguigu").text());
+
+            }
+
+            // 1) 测试使用 jQuery 操作文本节点, 属性节点及查找元素节点
+            function testNode() {
+                //1. 操作文本节点: 通过 jQuery 对象的 text() 方法
+               alert($("#bj").text());
+               $("#bj").text("尚硅谷");
+
+                //2. 操作属性节点: 通过 jQuery 对象的 attr() 方法.
+                //注: 直接操作 value 属性值可以使用更便捷的 val() 方法.
+                alert($(":text[name='username']").attr("value"));
+                $(":text[name='username']").attr("value", "尚硅谷");
+            }
+        });
+    </script>
+</head>
+<body>
+    <p>你喜欢哪个城市?</p>
+    <ul id="city">
+        <li id="bj" name="BeiJing">北京</li>
+        <li>上海</li>
+        <li>东京</li>
+        <li>首尔</li>
+    </ul>
+
+    <br><br>
+    <p>你喜欢哪款单机游戏?</p>
+    <ul id="game">
+        <li id="rl">红警</li>
+        <li>实况</li>
+        <li>极品飞车</li>
+        <li>魔兽</li>
+    </ul>
+
+    <br><br>
+    <p>你喜欢哪种语言?</p>
+    <ul id="language">
+        <li>C</li>
+        <li>Java</li>
+        <li>Python</li>
+        <li>Scala</li>
+    </ul>
+
+    <br><br>
+    gender:
+    <input type="radio" name="gender" value="male"/>Male
+    <input type="radio" name="gender" value="female"/>Female
+
+    <br><br>
+    name: <input type="text" name="username" id="name" value="atguigu"/>
+</body>
+</html>
